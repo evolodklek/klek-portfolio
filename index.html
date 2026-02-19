@@ -140,6 +140,58 @@
       nav a{font-size:0.75rem;padding:0.3rem 0.5rem;}
       .skills-grid{grid-template-columns:1fr;gap:1rem;}
     }
+     /* Mobile zoomable images */
+.popup-image.zoomable {
+  cursor: grab;
+  transition: transform 0.3s ease;
+}
+.popup-image.zoomable.zoomed {
+  cursor: grab;
+  transform: scale(2.5);
+  transform-origin: center;
+}
+.popup-image.zoomable:active {
+  cursor: grabbing;
+}
+    // Mobile zoom + pan
+document.addEventListener('DOMContentLoaded', () => {
+  const images = document.querySelectorAll('.popup-image');
+  
+  images.forEach(img => {
+    img.classList.add('zoomable');
+    
+    let isZoomed = false;
+    let startX, startY, translateX = 0, translateY = 0;
+    
+    // Tap to zoom
+    img.addEventListener('click', (e) => {
+      if (window.innerWidth <= 900) {  // Mobile only
+        e.stopPropagation();
+        isZoomed = !isZoomed;
+        img.classList.toggle('zoomed', isZoomed);
+      }
+    });
+    
+    // Pan when zoomed (mobile)
+    let startTouchX, startTouchY;
+    img.addEventListener('touchstart', (e) => {
+      if (isZoomed && e.touches.length === 1) {
+        startTouchX = e.touches[0].clientX - translateX;
+        startTouchY = e.touches[0].clientY - translateY;
+      }
+    });
+    
+    img.addEventListener('touchmove', (e) => {
+      if (isZoomed && e.touches.length === 1) {
+        e.preventDefault();
+        translateX = e.touches[0].clientX - startTouchX;
+        translateY = e.touches[0].clientY - startTouchY;
+        img.style.transform = `scale(2.5) translate(${translateX}px, ${translateY}px)`;
+      }
+    });
+  });
+});
+
   </style>
 </head>
 <body>
@@ -289,7 +341,7 @@
     <img src="images/Picture3.png" alt="SLA light availability" class="popup-image">
   </div>
 </div>
-
+  
   <script>
     const sections=document.querySelectorAll('section[data-popup]:not([data-popup="none"])');
     const popups=document.querySelectorAll('.image-popup');
@@ -328,6 +380,7 @@
   </script>
 </body>
 </html>
+
 
 
 
