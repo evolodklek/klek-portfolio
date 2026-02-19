@@ -353,34 +353,28 @@ const sections = document.querySelectorAll('section[data-popup]:not([data-popup=
 const popups = document.querySelectorAll('.image-popup');
 const backArrow = document.getElementById('backArrow');
 
-let isZoomedStates = {}; // Track zoom per image
-
+// Popup functions
 const showPopup = (targetId) => {
   popups.forEach(p => p.classList.remove('active'));
   sections.forEach(s => s.classList.remove('active'));
   const target = document.getElementById('popup-' + targetId);
   if (target) {
     target.classList.add('active');
-    if (window.innerWidth <= 900) toggleBackArrow(true);
+    if (window.innerWidth <= 900 && backArrow) {
+      backArrow.classList.add('active');
+    }
   }
 };
 
 const hidePopup = () => {
   popups.forEach(p => p.classList.remove('active'));
   sections.forEach(s => s.classList.remove('active'));
-  if (window.innerWidth <= 900) toggleBackArrow(false);
-  // Reset all zooms
-  document.querySelectorAll('.popup-image.zoomable.zoomed').forEach(img => {
-    img.classList.remove('zoomed');
-    img.style.transform = '';
-  });
+  if (backArrow) {
+    backArrow.classList.remove('active');
+  }
 };
 
-const toggleBackArrow = (show) => {
-  if (backArrow) backArrow.classList.toggle('active', show);
-};
-
-// FIXED Observer - more sensitive for zoom/PC
+// Observer - FIXED sensitivity
 const observer = new IntersectionObserver(
   (entries) => {
     entries.forEach((entry) => {
@@ -393,49 +387,59 @@ const observer = new IntersectionObserver(
     });
   },
   {
-    threshold: [0.1, 0.3, 0.5], // Multiple thresholds
-    rootMargin: '-10% 0px -30% 0px' // Less aggressive
+    threshold: [0.1, 0.25, 0.5],
+    rootMargin: '-10% 0px -40% 0px'
   }
 );
 
-sections.forEach((section) => observer.observe(section));
+sections.forEach(section => observer.observe(section));
 
-// Click outside to close
+// Click outside
 document.addEventListener('click', (e) => {
   if (!e.target.closest('.image-popup') && !e.target.closest('section[data-popup]')) {
     hidePopup();
   }
 });
 
-// Mobile zoom + pan
+// Back arrow click - FIXED
+if (backArrow) {
+  backArrow.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    hidePopup();
+  });
+}
+
+// Mobile zoom
 document.addEventListener('DOMContentLoaded', () => {
   const images = document.querySelectorAll('.popup-image');
-  images.forEach((img, index) => {
+  images.forEach(img => {
     img.classList.add('zoomable');
-    const imgId = `img-${index}`;
-    isZoomedStates[imgId] = false;
+    
+    let isZoomed = false, translateX = 0, translateY = 0;
+    let startTouchX, startTouchY;
     
     img.addEventListener('click', (e) => {
       if (window.innerWidth <= 900) {
         e.stopPropagation();
-        isZoomedStates[imgId] = !isZoomedStates[imgId];
-        img.classList.toggle('zoomed', isZoomedStates[imgId]);
-        if (!isZoomedStates[imgId]) {
+        isZoomed = !isZoomed;
+        img.classList.toggle('zoomed', isZoomed);
+        if (!isZoomed) {
           img.style.transform = '';
+          translateX = translateY = 0;
         }
       }
     });
     
-    let startTouchX, startTouchY, translateX = 0, translateY = 0;
     img.addEventListener('touchstart', (e) => {
-      if (isZoomedStates[imgId] && e.touches.length === 1) {
+      if (isZoomed && e.touches.length === 1) {
         startTouchX = e.touches[0].clientX - translateX;
         startTouchY = e.touches[0].clientY - translateY;
       }
     });
     
     img.addEventListener('touchmove', (e) => {
-      if (isZoomedStates[imgId] && e.touches.length === 1) {
+      if (isZoomed && e.touches.length === 1) {
         e.preventDefault();
         translateX = e.touches[0].clientX - startTouchX;
         translateY = e.touches[0].clientY - startTouchY;
@@ -445,22 +449,16 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
-// Back arrow
-if (backArrow) {
-  backArrow.addEventListener('click', (e) => {
-    e.stopPropagation();
-    hidePopup();
-  });
-}
-
-// Initial hide + resize
+// Initial + resize
 if (window.innerWidth < 900) hidePopup();
 window.addEventListener('resize', () => {
   if (window.innerWidth < 900) hidePopup();
 });
 </script>
+
 </body>
 </html>
+
 
 
 
