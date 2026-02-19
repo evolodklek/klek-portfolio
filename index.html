@@ -42,12 +42,49 @@
     .project-title{font-size:1.15rem;font-weight:600;margin-bottom:.6rem;color:var(--text);}
     .project-meta{font-size:.88rem;color:var(--accent);margin-bottom:1rem;text-transform:uppercase;letter-spacing:.05em;}
     
-    /* Popup image container - right side overlay */
-    .image-popup{position:fixed;top:0;right:-520px;width:520px;height:220vh;background:rgba(11,12,16,.98);border-left:1px solid rgba(255,255,255,.1);backdrop-filter:blur(20px);z-index:1000;display:flex;flex-direction:column;gap:20px;padding:3rem 2rem 2rem;overflow-y:auto;transition:all .6s cubic-bezier(.25,.46,.45,.94);box-shadow:-25px 0 70px rgba(0,0,0,.9);}
-    .image-popup.active{right:0;}
-    .image-popup h3{color:var(--accent);font-size:1.15rem;margin-bottom:1.5rem;text-align:center;letter-spacing:.05em;border-bottom:1px solid rgba(72,201,176,.3);padding-bottom:.8rem;}
-    .image-frame{display:flex;flex-direction:column;gap:1.5rem;flex:1;}
-    .popup-image{width:100%;height:220px;object-fit:cover;border-radius:14px;border:1px solid rgba(255,255,255,.2);box-shadow:0 15px 40px rgba(0,0,0,.7);}
+   /* Popup image container - right side overlay */
+.image-popup{
+  position:fixed;
+  top:0;
+  right:-520px;
+  width:520px;
+  height:100vh;  /* Keep at 100vh */
+  background:rgba(11,12,16,.98);
+  border-left:1px solid rgba(255,255,255,.1);
+  backdrop-filter:blur(20px);
+  z-index:1000;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+  padding:3rem 2rem 2rem;
+  overflow-y:auto;
+  transition:all .6s cubic-bezier(.25,.46,.45,.94);
+  box-shadow:-25px 0 70px rgba(0,0,0,.9);
+}
+.image-popup.active{right:0;}
+.image-popup h3{
+  color:var(--accent);
+  font-size:1.15rem;
+  margin-bottom:1.5rem;
+  text-align:center;
+  letter-spacing:.05em;
+  border-bottom:1px solid rgba(72,201,176,.3);
+  padding-bottom:.8rem;
+}
+.image-frame{
+  display:flex;
+  flex-direction:column;
+  gap:1.5rem;
+  /* REMOVED flex:1 - this was overriding image heights */
+}
+.popup-image{
+  width:100%;
+  height:280px;  /* NOW THIS WILL WORK - change this value freely */
+  object-fit:cover;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.2);
+  box-shadow:0 15px 40px rgba(0,0,0,.7);
+}
     
     .skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.4rem;font-size:.92rem;color:var(--muted);}
     .skill-block{background:rgba(255,255,255,.03);padding:1.4rem;border-radius:12px;border:1px solid rgba(255,255,255,.1);}
