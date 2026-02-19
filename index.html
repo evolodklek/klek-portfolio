@@ -150,6 +150,34 @@
   .popup-image.zoomable:active {
     cursor: grabbing;
   }
+    /* Mobile back arrow */
+.back-arrow {
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 3000;
+  background: rgba(72, 201, 176, 0.9);
+  color: white;
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 20px;
+  cursor: pointer;
+  display: none;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 25px rgba(72, 201, 176, 0.3);
+  transition: all 0.3s ease;
+}
+.back-arrow:hover {
+  background: #48c9b0;
+  transform: scale(1.1);
+}
+.back-arrow.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
   </style>
 </head>
 <body>
@@ -299,7 +327,8 @@
     <img src="images/Picture3.png" alt="SLA light availability" class="popup-image">
   </div>
 </div>
-  
+  <!-- Mobile back arrow -->
+<button class="back-arrow" id="backArrow">←</button>
   <script>
     const sections=document.querySelectorAll('section[data-popup]:not([data-popup="none"])');
     const popups=document.querySelectorAll('.image-popup');
@@ -377,10 +406,38 @@ document.addEventListener('DOMContentLoaded', function() {
     });
   });
 });
+// Mobile back arrow
+const backArrow = document.getElementById('backArrow');
+
+function toggleBackArrow(show) {
+  if (window.innerWidth <= 900) {
+    backArrow.classList.toggle('active', show);
+  }
+}
+
+// Update existing showPopup & hidePopup
+const originalShowPopup = showPopup;
+showPopup = function(targetId) {
+  originalShowPopup(targetId);
+  toggleBackArrow(true);
+};
+
+const originalHidePopup = hidePopup;
+hidePopup = function() {
+  originalHidePopup();
+  toggleBackArrow(false);
+};
+
+// Back arrow click
+backArrow.addEventListener('click', (e) => {
+  e.stopPropagation();
+  hidePopup();
+});
 
   </script>
 </body>
 </html>
+
 
 
 
