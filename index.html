@@ -30,8 +30,24 @@
 
     .main-content{flex:1;padding:2.5rem 4vw 2.5rem 2rem;max-width:1100px;overflow-y:auto;}
     
-    .avatar{width:120px;height:120px;border-radius:50%;overflow:hidden;border:2px solid rgba(255,255,255,.15);box-shadow:0 18px 40px rgba(0,0,0,.8);margin:0 auto 1rem;}
-    .avatar img{width:100%;height:100%;object-fit:cover;}
+    .avatar{
+  width:120px;
+  height:120px;
+  max-width:120px;     /* NEW: Caps max size */
+  max-height:120px;    /* NEW: Caps max size */
+  border-radius:50%;
+  overflow:hidden;
+  border:2px solid rgba(255,255,255,.15);
+  box-shadow:0 18px 40px rgba(0,0,0,.8);
+  margin:0 auto 1rem;
+  flex-shrink:0;       /* NEW: Prevents shrinking/stretching */
+}
+.avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
     .sidebar-main{text-align:center;}
     h1{font-size:1.6rem;letter-spacing:.04em;margin-bottom:.2rem;}
     .tagline{font-size:.9rem;color:var(--muted);margin-bottom:.3rem;}
@@ -112,12 +128,27 @@
     .workflow li{padding:.5rem 0 .5rem 1.2rem;position:relative;}
     .workflow li:before{content:"→";position:absolute;left:0;color:var(--accent);font-weight:bold;font-size:1.1em;}
     
-    @media (max-width:1200px){.image-popup{width:90vw;right:-90vw;max-width:500px;}}
-    @media (max-width:900px){
-      .container{flex-direction:column;}
-      .sidebar{position:static;width:100%;height:auto;flex-direction:row;align-items:center;gap:2rem;padding:2rem;box-shadow:0 8px 30px rgba(0,0,0,.5);}
-      .sidebar-main{flex:1;text-align:left;}
-      .main-content{padding:2rem 2rem 2rem 2rem;}
+   @media (max-width:900px){
+  .container{flex-direction:column;}
+  .sidebar{
+    position:static;
+    width:100%;
+    height:auto;
+    flex-direction:row;
+    align-items:center;
+    gap:2rem;
+    padding:2rem;
+    box-shadow:0 8px 30px rgba(0,0,0,.5);
+  }
+  .sidebar-main{flex:1;text-align:left;}
+  /* ADD THESE MOBILE AVATAR FIXES: */
+  .avatar{
+    width:80px !important;    /* Smaller on mobile */
+    height:80px !important;
+    max-width:80px !important;
+    flex-shrink:0;
+  }
+  .main-content{padding:2rem;}
       .image-popup{display:none;}
       section.active{padding:2.5rem !important;margin-left:0 !important;}
       nav{flex-direction:row;flex-wrap:wrap;justify-content:center;}
@@ -311,6 +342,7 @@
   </script>
 </body>
 </html>
+
 
 
 
