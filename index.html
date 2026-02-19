@@ -410,6 +410,21 @@ const observer = new IntersectionObserver(entries => {
     }
   });
 }, { threshold: 0.25, rootMargin: '-5% 0px -50% 0px' });
+// PC Back Arrow - MINIMAL SAFE
+const backArrowPC = document.getElementById('backArrowPC');
+if (backArrowPC) {
+  // Show arrow when ANY popup active
+  document.addEventListener('scroll', () => {
+    const anyPopupActive = document.querySelector('.image-popup.active');
+    backArrowPC.classList.toggle('active', !!anyPopupActive && window.innerWidth > 900);
+  });
+  
+  // Close on click
+  backArrowPC.addEventListener('click', (e) => {
+    e.stopPropagation();
+    hidePopup();
+  });
+}
 
   
 </script>
@@ -417,6 +432,7 @@ const observer = new IntersectionObserver(entries => {
 
 </body>
 </html>
+
 
 
 
