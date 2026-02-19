@@ -349,24 +349,32 @@
   <!-- Mobile back arrow -->
 <button class="back-arrow" id="backArrow">←</button>
 <script>
+// DEBUG: Console log to verify loading
+console.log('Script loaded');
+
+// Elements
 const sections = document.querySelectorAll('section[data-popup]:not([data-popup="none"])');
 const popups = document.querySelectorAll('.image-popup');
-const backArrow = document.getElementById('backArrow');
+const backArrow = document.querySelector('#backArrow');
 
-// Popup functions
+console.log('Sections:', sections.length, 'Popups:', popups.length, 'Arrow:', backArrow);
+
 const showPopup = (targetId) => {
+  console.log('Showing popup:', targetId);
   popups.forEach(p => p.classList.remove('active'));
   sections.forEach(s => s.classList.remove('active'));
   const target = document.getElementById('popup-' + targetId);
   if (target) {
     target.classList.add('active');
-    if (window.innerWidth <= 900 && backArrow) {
+    if (backArrow && window.innerWidth <= 900) {
       backArrow.classList.add('active');
+      console.log('Back arrow shown');
     }
   }
 };
 
 const hidePopup = () => {
+  console.log('Hiding popup');
   popups.forEach(p => p.classList.remove('active'));
   sections.forEach(s => s.classList.remove('active'));
   if (backArrow) {
@@ -374,10 +382,10 @@ const hidePopup = () => {
   }
 };
 
-// Observer - FIXED sensitivity
+// Observer
 const observer = new IntersectionObserver(
   (entries) => {
-    entries.forEach((entry) => {
+    entries.forEach(entry => {
       if (entry.isIntersecting) {
         const popupType = entry.target.dataset.popup;
         if (popupType !== 'none') showPopup(popupType);
@@ -386,78 +394,54 @@ const observer = new IntersectionObserver(
       }
     });
   },
-  {
-    threshold: [0.1, 0.25, 0.5],
-    rootMargin: '-10% 0px -40% 0px'
-  }
+  { threshold: 0.2, rootMargin: '-5% 0px -30% 0px' }
 );
 
 sections.forEach(section => observer.observe(section));
 
-// Click outside
+// Events
 document.addEventListener('click', (e) => {
   if (!e.target.closest('.image-popup') && !e.target.closest('section[data-popup]')) {
     hidePopup();
   }
 });
 
-// Back arrow click - FIXED
 if (backArrow) {
   backArrow.addEventListener('click', (e) => {
+    console.log('Back arrow clicked!');
     e.preventDefault();
     e.stopPropagation();
     hidePopup();
   });
 }
 
-// Mobile zoom
+// Mobile zoom (simplified)
 document.addEventListener('DOMContentLoaded', () => {
-  const images = document.querySelectorAll('.popup-image');
-  images.forEach(img => {
+  document.querySelectorAll('.popup-image').forEach(img => {
     img.classList.add('zoomable');
     
-    let isZoomed = false, translateX = 0, translateY = 0;
-    let startTouchX, startTouchY;
-    
+    let isZoomed = false;
     img.addEventListener('click', (e) => {
       if (window.innerWidth <= 900) {
         e.stopPropagation();
         isZoomed = !isZoomed;
         img.classList.toggle('zoomed', isZoomed);
-        if (!isZoomed) {
-          img.style.transform = '';
-          translateX = translateY = 0;
-        }
-      }
-    });
-    
-    img.addEventListener('touchstart', (e) => {
-      if (isZoomed && e.touches.length === 1) {
-        startTouchX = e.touches[0].clientX - translateX;
-        startTouchY = e.touches[0].clientY - translateY;
-      }
-    });
-    
-    img.addEventListener('touchmove', (e) => {
-      if (isZoomed && e.touches.length === 1) {
-        e.preventDefault();
-        translateX = e.touches[0].clientX - startTouchX;
-        translateY = e.touches[0].clientY - startTouchY;
-        img.style.transform = `scale(2.5) translate(${translateX}px, ${translateY}px)`;
       }
     });
   });
 });
 
-// Initial + resize
+// Init
 if (window.innerWidth < 900) hidePopup();
 window.addEventListener('resize', () => {
   if (window.innerWidth < 900) hidePopup();
 });
 </script>
 
+
 </body>
 </html>
+
 
 
 
