@@ -3,508 +3,271 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vsevolod Klekovkin – Geoecology</title>
+  <title>Vsevolod Klekovkin – Geoecology PhD</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🌿</text></svg>">
   <style>
-    :root {
-      --bg: #0b0c10;
-      --card: #11131a;
-      --accent: #48c9b0;
-      --muted: #9da5b4;
-      --text: #f5f7fb;
-      --radius: 14px;
-    }
-
-    * { 
-      box-sizing: border-box; 
-      margin: 0; 
-      padding: 0; 
-    }
-
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
-                   "Segoe UI", sans-serif;
-      background: radial-gradient(circle at top, #1b2838 0, #050609 55%);
-      color: var(--text);
-      display: flex;
-      min-height: 100vh;
-      line-height: 1.6;
-      scroll-behavior: smooth;
-    }
-
-    /* Layout */
-    .sidebar {
-      position: sticky;
-      top: 0;
-      align-self: flex-start;
-      width: 320px;
-      min-height: 100vh;
-      padding: 2.5rem 2rem;
-      background: linear-gradient(160deg, #050609, #141824);
-      border-right: 1px solid rgba(255,255,255,0.06);
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-    }
-
-    .main {
-      flex: 1;
-      padding: 2.5rem 4vw;
-      max-width: 920px;
-      margin-inline: auto;
-    }
-
-    /* Sidebar content */
-    .avatar {
-      width: 120px;
-      height: 120px;
-      border-radius: 50%;
-      overflow: hidden;
-      border: 2px solid rgba(255,255,255,0.15);
-      box-shadow: 0 18px 40px rgba(0,0,0,0.8);
-      margin: 0 auto 1rem;
-    }
-
-    .avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .sidebar-main {
-      text-align: center;
-    }
-
-    h1 {
-      font-size: 1.6rem;
-      letter-spacing: 0.04em;
-      margin-bottom: 0.2rem;
-    }
-
-    .tagline {
-      font-size: 0.9rem;
-      color: var(--muted);
-      margin-bottom: 0.3rem;
-    }
-
-    .meta {
-      font-size: 0.85rem;
-      color: var(--muted);
-      margin-bottom: 1rem;
-    }
-
-    .pill-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.4rem;
-      justify-content: center;
-      margin-bottom: 1rem;
-    }
-
-    .pill {
-      font-size: 0.7rem;
-      padding: 0.25rem 0.6rem;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.18);
-      color: var(--muted);
-      backdrop-filter: blur(10px);
-    }
-
-    nav {
-      display: flex;
-      flex-direction: column;
-      gap: 0.3rem;
-    }
-
-    nav a {
-      font-size: 0.85rem;
-      color: var(--muted);
-      text-decoration: none;
-      padding: 0.35rem 0.6rem;
-      border-radius: 999px;
-      transition: all 0.2s ease;
-    }
-
-    nav a:hover {
-      color: var(--text);
-      background: rgba(255,255,255,0.04);
-    }
-
-    .contact {
-      margin-top: auto;
-      font-size: 0.8rem;
-      color: var(--muted);
-      text-align: center;
-    }
-
-    .contact a {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    /* Main content cards */
-    section {
-      background: rgba(10,13,22,0.9);
-      border-radius: var(--radius);
-      padding: 1.6rem 1.8rem;
-      margin-bottom: 1.4rem;
-      border: 1px solid rgba(255,255,255,0.05);
-      box-shadow: 0 18px 40px rgba(0,0,0,0.45);
-      backdrop-filter: blur(18px);
-    }
-
-    section h2 {
-      font-size: 1.05rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.8rem;
-    }
-
-    p { font-size: 0.93rem; color: #d7dde9; }
-
-    a { color: var(--accent); }
-
-    /* Project containers - taller for better scrolling */
-    .project {
-      padding: 2rem 0;
-      margin-bottom: 1rem;
-      border-top: 1px dashed rgba(255,255,255,0.08);
-      min-height: 200px; /* Ensures good scroll detection */
-    }
-    .project:first-child { border-top: none; }
-
-    .project-title {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 0.5rem;
-    }
-
-    .project-meta {
-      font-size: 0.85rem;
-      color: var(--muted);
-      margin-bottom: 0.8rem;
-    }
-
-    /* Project gallery - sticky and larger */
-    .projects-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
-      gap: 2rem;
-      align-items: flex-start;
-    }
-
-    .project-gallery {
-      position: sticky;
-      top: 2rem;
-      height: 320px;
-      border-radius: calc(var(--radius) - 4px);
-      overflow: hidden;
-      background: radial-gradient(circle at top, #1b2838 0, #050609 70%);
-      border: 1px solid rgba(255,255,255,0.08);
-      box-shadow: 0 12px 32px rgba(0,0,0,0.4);
-    }
-
-    .project-gallery img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      opacity: 0;
-      transform: scale(1.05) translateY(8px);
-      transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-      position: absolute;
-      top: 0;
-      left: 0;
-    }
-
-    .project-gallery img.active {
-      opacity: 1;
-      transform: scale(1) translateY(0);
-      position: relative;
-    }
-
-    /* Debug indicator */
-    .debug-active {
-      position: absolute;
-      top: 8px;
-      right: 8px;
-      background: rgba(72,201,176,0.9);
-      color: #000;
-      padding: 0.2rem 0.4rem;
-      border-radius: 4px;
-      font-size: 0.7rem;
-      font-weight: 600;
-    }
-
-    /* Skills grid */
-    .skills-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 0.9rem;
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
-
-    .skill-block strong {
-      display: block;
-      font-size: 0.8rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--text);
-      margin-bottom: 0.35rem;
-    }
-
-    /* CV link */
-    .cv-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      padding: 0.45rem 0.9rem;
-      border-radius: 999px;
-      background: #48c9b014;
-      border: 1px solid #48c9b044;
-      font-size: 0.85rem;
-      text-decoration: none;
-      color: var(--accent);
-      margin-top: 0.6rem;
-    }
-
-    /* Responsive */
-    @media (max-width: 860px) {
-      body { flex-direction: column; }
-      .sidebar {
-        position: static;
-        width: 100%;
-        min-height: auto;
-        flex-direction: row;
-        align-items: center;
-        gap: 1rem;
-        padding: 1.2rem 1.4rem;
-      }
-      .sidebar-main {
-        flex: 1;
-        text-align: left;
-      }
-      .main { padding: 1.4rem 1.2rem 2rem; }
-      .projects-grid { grid-template-columns: 1fr; }
-      .project-gallery {
-        position: relative;
-        order: -1;
-        margin-bottom: 1.2rem;
-        height: 240px;
-      }
-      nav { flex-direction: row; flex-wrap: wrap; }
-      .contact { margin-top: 0; text-align: right; }
+    :root{--bg:#0b0c10;--card:#11131a;--accent:#48c9b0;--muted:#9da5b4;--text:#f5f7fb;--radius:14px;}
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;background:radial-gradient(circle at top,#1b2838 0%,#050609 55%);color:var(--text);min-height:100vh;overflow-x:hidden;}
+    
+    /* NEW: Single layer layout - sidebar + content side-by-side */
+    .container{display:flex;min-height:100vh;}
+    .sidebar{position:sticky;top:0;width:340px;height:100vh;padding:2.5rem 2rem;background:linear-gradient(160deg,#050609,#141824);border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;gap:1.5rem;box-shadow:4px 0 30px rgba(0,0,0,.4);}
+    .main-content{flex:1;padding:2.5rem 4vw 2.5rem 2rem;max-width:1100px;overflow-y:auto;}
+    
+    .avatar{width:120px;height:120px;border-radius:50%;overflow:hidden;border:2px solid rgba(255,255,255,.15);box-shadow:0 18px 40px rgba(0,0,0,.8);margin:0 auto 1rem;}
+    .avatar img{width:100%;height:100%;object-fit:cover;}
+    .sidebar-main{text-align:center;}
+    h1{font-size:1.6rem;letter-spacing:.04em;margin-bottom:.2rem;}
+    .tagline{font-size:.9rem;color:var(--muted);margin-bottom:.3rem;}
+    .meta{font-size:.85rem;color:var(--muted);margin-bottom:1rem;}
+    .pill-row{display:flex;flex-wrap:wrap;gap:.4rem;justify-content:center;margin-bottom:1rem;}
+    .pill{font-size:.7rem;padding:.25rem .6rem;border-radius:999px;border:1px solid rgba(255,255,255,.18);color:var(--muted);backdrop-filter:blur(10px);}
+    nav{display:flex;flex-direction:column;gap:.3rem;}
+    nav a{font-size:.85rem;color:var(--muted);text-decoration:none;padding:.35rem .6rem;border-radius:999px;transition:all .2s ease;}
+    nav a:hover,nav a.active{color:var(--text);background:rgba(255,255,255,.04);}
+    .contact{margin-top:auto;font-size:.8rem;color:var(--muted);text-align:center;}
+    .contact a{color:var(--accent);text-decoration:none;}
+    
+    section{position:relative;background:rgba(10,13,22,.9);border-radius:var(--radius);padding:2.5rem 2.5rem 2.5rem 2rem;margin-bottom:2rem;border:1px solid rgba(255,255,255,.05);box-shadow:0 20px 45px rgba(0,0,0,.5);backdrop-filter:blur(20px);transition:margin-left .6s cubic-bezier(.25,.46,.45,.94),padding-right .6s cubic-bezier(.25,.46,.45,.94),padding-left .6s cubic-bezier(.25,.46,.45,.94);}
+    section.active{padding-right:2.5rem;padding-left:1rem;margin-left:0;} /* No shift since same layer */
+    section h2{font-size:1.1rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:1rem;border-bottom:1px solid rgba(72,201,176,.2);padding-bottom:.5rem;}
+    p{font-size:.95rem;color:#d7dde9;line-height:1.65;}
+    a{color:var(--accent);text-decoration:none;}
+    a:hover{text-decoration:underline;}
+    strong{font-weight:600;color:var(--text);}
+    
+    .project{padding:1.5rem 0;margin-bottom:1.5rem;border-top:1px dashed rgba(255,255,255,.08);}
+    .project:first-child{border-top:none;}
+    .project-title{font-size:1.15rem;font-weight:600;margin-bottom:.6rem;color:var(--text);}
+    .project-meta{font-size:.88rem;color:var(--accent);margin-bottom:1rem;text-transform:uppercase;letter-spacing:.05em;}
+    
+    /* Popup image container - right side overlay */
+    .image-popup{position:fixed;top:0;right:-520px;width:520px;height:100vh;background:rgba(11,12,16,.98);border-left:1px solid rgba(255,255,255,.1);backdrop-filter:blur(20px);z-index:1000;display:flex;flex-direction:column;gap:20px;padding:3rem 2rem 2rem;overflow-y:auto;transition:all .6s cubic-bezier(.25,.46,.45,.94);box-shadow:-25px 0 70px rgba(0,0,0,.9);}
+    .image-popup.active{right:0;}
+    .image-popup h3{color:var(--accent);font-size:1.15rem;margin-bottom:1.5rem;text-align:center;letter-spacing:.05em;border-bottom:1px solid rgba(72,201,176,.3);padding-bottom:.8rem;}
+    .image-frame{display:flex;flex-direction:column;gap:1.5rem;flex:1;}
+    .popup-image{width:100%;height:240px;object-fit:cover;border-radius:14px;border:1px solid rgba(255,255,255,.2);box-shadow:0 15px 40px rgba(0,0,0,.7);}
+    .popup-image-pair{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;}
+    .popup-image-pair .popup-image{height:175px;}
+    
+    .skills-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.4rem;font-size:.92rem;color:var(--muted);}
+    .skill-block{background:rgba(255,255,255,.03);padding:1.4rem;border-radius:12px;border:1px solid rgba(255,255,255,.1);}
+    .skill-block strong{display:block;font-size:.88rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);margin-bottom:.5rem;}
+    
+    .cv-link{display:inline-flex;align-items:center;gap:.6rem;padding:.7rem 1.4rem;border-radius:999px;background:linear-gradient(135deg,#48c9b0,#2aa98f);border:none;font-size:.95rem;font-weight:600;text-decoration:none;color:white;margin-top:1.2rem;box-shadow:0 10px 30px rgba(72,201,176,.4);}
+    
+    .workflow{list-style:none;background:rgba(255,255,255,.03);padding:1.2rem;margin:1.2rem 0;border-left:4px solid var(--accent);border-radius:0 10px 10px 0;}
+    .workflow li{padding:.5rem 0 .5rem 1.2rem;position:relative;}
+    .workflow li:before{content:"→";position:absolute;left:0;color:var(--accent);font-weight:bold;font-size:1.1em;}
+    
+    @media (max-width:1200px){.image-popup{width:90vw;right:-90vw;max-width:500px;}}
+    @media (max-width:900px){
+      .container{flex-direction:column;}
+      .sidebar{position:static;width:100%;height:auto;flex-direction:row;align-items:center;gap:2rem;padding:2rem;box-shadow:0 8px 30px rgba(0,0,0,.5);}
+      .sidebar-main{flex:1;text-align:left;}
+      .main-content{padding:2rem 2rem 2rem 2rem;}
+      .image-popup{display:none;}
+      section.active{padding:2.5rem !important;margin-left:0 !important;}
+      nav{flex-direction:row;flex-wrap:wrap;justify-content:center;}
+      .contact{margin-top:0;text-align:right;}
     }
   </style>
 </head>
 <body>
-  <!-- SIDEBAR / VISIT CARD -->
-  <aside class="sidebar">
-    <div class="avatar">
-      <img src="C:/Users/evolo/OneDrive/Desktop/pic.jpg" alt="Vsevolod Klekovkin">
-    </div>
-
-    <div class="sidebar-main">
-      <h1>Vsevolod Klekovkin</h1>
-      <p class="tagline">MSc Geoecology · Soil biogeochemistry & C cycling</p>
-      <p class="meta">Eberhard Karls University of Tübingen · Germany</p>
-
-      <div class="pill-row">
-        <span class="pill">Geoecology</span>
-        <span class="pill">Soil C & isotopes</span>
-        <span class="pill">Remote sensing</span>
+  <div class="container">
+    <aside class="sidebar">
+      <div class="avatar"><img src="pic.jpg" alt="Vsevolod Klekovkin"></div>
+      <div class="sidebar-main">
+        <h1>Vsevolod Klekovkin</h1>
+        <p class="tagline">MSc Geoecology Candidate</p>
+        <p class="meta">University of Tübingen · Soil Biogeochemistry</p>
+        <div class="pill-row">
+          <span class="pill">¹³C Tracers</span><span class="pill">PLFA</span><span class="pill">CSIA</span><span class="pill">EA-IRMS</span>
+        </div>
+        <nav>
+          <a href="#about">About</a><a href="#isotopes">Isotopes</a><a href="#projects">Projects</a><a href="#skills">Skills</a><a href="#cv">CV</a>
+        </nav>
       </div>
-
-      <nav>
-        <a href="#about">About</a>
-        <a href="#projects">Projects</a>
-        <a href="#skills">Skills</a>
-        <a href="#cv">CV</a>
-        <a href="#contact">Contact</a>
-      </nav>
-    </div>
-
-    <div class="contact">
-      <div>Seminargasse 6 · 72108 Rottenburg</div>
-      <div>+49 176 64742311</div>
-      <div><a href="mailto:evolodklek@gmail.com">evolodklek@gmail.com</a></div>
-    </div>
-  </aside>
-
-  <!-- MAIN CONTENT -->
-  <main class="main">
-    <section id="about">
-      <h2>About</h2>
-      <p>
-        MSc Geoecology candidate (GPA 1.97, Tübingen) with BSc in Ecology (4.6/5.0). 
-        I work at the interface of soil biogeochemistry, carbon cycling and remote sensing, and I am seeking a PhD position in geoecology / soil biogeochemistry.
-      </p>
-    </section>
-
-    <section id="projects">
-      <h2>Key Projects</h2>
-
-      <div class="projects-grid">
-        <!-- Text column -->
-        <div>
-          <div class="project" data-project="0">
-            <div class="project-title">Geo‑Biosphere Lab (2025)</div>
-            <div class="project-meta">C‑13 pulse‑chase · PLFA/PCA · tillage effects</div>
-            <p>
-              Led C‑13 labeling on rendzic Luvisol under contrasting tillage. 
-              Quantified 4× higher belowground C allocation in ploughed vs. harrowed soils (ANOVA p&lt;0.01); PLFA‑PCA showed strong Actinobacteria response (F=13.27, p=0.015).
-              Demonstrates experience with EA‑IRMS, microbial biomarkers and isotope mixing models.
-            </p>
-          </div>
-
-          <div class="project" data-project="1">
-            <div class="project-title">SLA Terrace Walls (2025)</div>
-            <div class="project-meta">Urban ecology · trait gradients · light variability</div>
-            <p>
-              Measured specific leaf area (SLA) for 64 wall‑rooted plants (mostly <em>Hedera helix</em>) along light availability and variability gradients. 
-              Observed decreasing SLA with higher light intensity/variability and greater plasticity in shaded microsites.
-            </p>
-          </div>
-
-          <div class="project" data-project="2">
-            <div class="project-title">Oil Remediation (2023–2024)</div>
-            <div class="project-meta">Field sampling · NDVI time‑series · bioremediation</div>
-            <p>
-              Independently sampled crude‑oil‑contaminated sites (up to 8019 m², 0.2–2 m depth), interpreted lab TPH results (0.011–0.287 mg/kg) and adapted bioremediation plans. 
-              Designed SPOT/Landsat‑based NDVI monitoring showing vegetation drop from 0.77 to 0.69 between 1995 and 2023.
-            </p>
-          </div>
-
-          <div class="project" data-project="3">
-            <div class="project-title">Marine Geology Workshop</div>
-            <div class="project-meta">Core description · sedimentology</div>
-            <p>
-              Processed Indian Ocean sediment core: split and logged core, polished surfaces, described lithology and sedimentary structures, and performed microscopy.
-            </p>
-          </div>
-
-          <div class="project" data-project="4">
-            <div class="project-title">HiWi Biogeology</div>
-            <div class="project-meta">Stable isotopes · collagen & enamel</div>
-            <p>
-              Conducted collagen extraction from bone, sampled tooth enamel and applied amino‑acid protocols for stable isotope analyses.
-            </p>
-          </div>
-        </div>
-
-        <!-- Image gallery -->
-        <div class="project-gallery">
-          <div class="debug-active" id="debug">0</div>
-          
-          <img src="C:/Users/evolo/OneDrive/Desktop/Picture10.png" alt="PCA biplot PLFA" data-img="0">
-          <img src="C:/Users/evolo/OneDrive/Desktop/Picture3.png" alt="SLA light variability" data-img="1">
-          <img src="C:/Users/evolo/OneDrive/Desktop/Picture7.png" alt="Oil site 3D model" data-img="2">
-          <img src="C:/Users/evolo/OneDrive/Desktop/Picture3.png" alt="Remediation satellite" data-img="3">
-          <img src="C:/Users/evolo/OneDrive/Desktop/Picture1.jpg" alt="Terrace wall plants" data-img="4">
-        </div>
+      <div class="contact">
+        <div>Seminargasse 6 · 72108 Rottenburg</div>
+        <div>+49 176 64742311</div>
+        <div><a href="mailto:evolodklek@gmail.com">evolodklek@gmail.com</a></div>
       </div>
-    </section>
+    </aside>
 
-    <section id="skills">
-      <h2>Skills</h2>
-      <div class="skills-grid">
-        <div class="skill-block">
-          <strong>Lab & field</strong>
-          C‑13 labeling, PLFA, EA‑IRMS, soil & sediment coring, soil sampling, basic microscopy.
+    <main class="main-content">
+      <section id="about" data-popup="none">
+        <h2>About</h2>
+        <p>MSc Geoecology candidate (1.97 GPA, Tübingen) with BSc Ecology (4.6/5.0). Advanced experience in <strong>stable isotope biogeochemistry</strong>, C-cycle tracer studies, PLFA microbial biomarkers, and paleoenvironmental reconstructions. Seeking PhD position in soil biogeochemistry / geoecology.</p>
+      </section>
+
+      <section id="isotopes" data-popup="biosphere">
+        <h2>Isotope Biogeochemistry</h2>
+        
+        <div class="project">
+          <div class="project-title">Biosphere Lab: C-Isotope Allocation</div>
+          <div class="project-meta">EA-IRMS · Isotope mixing models · t-tests</div>
+          <p>Designed 3-replicate pulse-chase experiment across plant communities. Quantified <strong>¹³C partitioning</strong> into aboveground/belowground biomass and rhizosphere soil via <strong>EA-IRMS</strong>. T-tests revealed significant pool-specific allocation differences (p<0.05).</p>
+          <ul class="workflow">
+            <li>Drying, milling, tin capsule preparation</li>
+            <li>Natural abundance δ¹³C baseline measurement</li>
+            <li>Isotope mixing model partitioning</li>
+          </ul>
         </div>
-        <div class="skill-block">
-          <strong>Software</strong>
-          QGIS (intermediate), R (intermediate), Python (basic), MS Office (advanced).
+
+        <div class="project">
+          <div class="project-title">Rhizosphere Microbiology (PLFA)</div>
+          <div class="project-meta">Phospholipid fatty acids · PCA · Actinobacteria</div>
+          <p><strong>PLFA biomarker analysis</strong> fingerprinting microbial communities across pollinator strips. PCA identified tillage-driven <strong>Actinobacteria enrichment</strong> (F=13.27, p=0.015).</p>
         </div>
-        <div class="skill-block">
-          <strong>Languages</strong>
-          Russian (native), English (fluent), basic German.
+      </section>
+
+      <section id="projects" data-popup="sla">
+        <h2>Field & Laboratory Projects</h2>
+        
+        <div class="project">
+          <div class="project-title">SLA Terrace Walls (Plant Ecology)</div>
+          <div class="project-meta">Functional traits · Light gradients · R/ANOVA</div>
+          <p>Quantified SLA plasticity in 64 wall-rooted plants (*Hedera helix*) along light intensity/CV gradients. Linear models showed SLA decline with variability (R²=0.47, p=0.058).</p>
         </div>
+        
+        <div class="project">
+          <div class="project-title">Biogeology HiWi: CSIA Preparation</div>
+          <div class="project-meta">Collagen extraction · Amino acid CSIA</div>
+          <p>Complete pretreatment workflow for paleodiet CSIA from bone/teeth:</p>
+          <ul class="workflow">
+            <li>Enamel/dentine separation, bone crushing (<180μm)</li>
+            <li>Collagen extraction (HCl demineralization, ultrafiltration)</li>
+            <li>Amino acid hydrolysis, derivatization (BTFA/IPA)</li>
+            <li>QA/QC: C:N ratios, δ¹³C/δ¹⁵N validation</li>
+          </ul>
+        </div>
+
+        <div class="project">
+          <div class="project-title">Isotopes in Ecosystem Sciences</div>
+          <div class="project-meta">Tracer design · Reviewer panel defense</div>
+          <p>M.Sc. course: Stable/radiogenic isotopes, CSIA, C/N/P cycling, ecohydrology. Defended isotope-based research proposal before mock DFG panel.</p>
+          <p><a href="https://uni-tuebingen.de/.../isotope-course/" target="_blank">Course Details</a></p>
+        </div>
+
+        <div class="project">
+          <div class="project-title">M.Sc. Thesis: Pleistocene Paleoecology</div>
+          <div class="project-meta">CSIA · Paleovegetation reconstruction</div>
+          <p>δ¹³C amino acid analysis of Central European megafauna for C₃/C₄ grassland reconstruction.</p>
+        </div>
+      </section>
+
+      <section data-popup="none">
+        <h2>Geological Experience</h2>
+        <div class="project">
+          <div class="project-title">Oil Remediation Monitoring</div>
+          <div class="project-meta">NDVI · TPH analysis · 8019m² sites</div>
+          <p>TPH soil sampling (0.011-0.287 mg/kg), Landsat/SPOT NDVI time-series (0.77→0.69 decline).</p>
+        </div>
+        <div class="project">
+          <div class="project-title">Geotechnical Laboratory</div>
+          <div class="project-meta">Oedometer · Shear · Proctor</div>
+          <p>Complete soil mechanical testing suite + engineering reports.</p>
+        </div>
+        <div class="project">
+          <div class="project-title">Marine Geology Core Processing</div>
+          <div class="project-meta">Lithology · Microscopy · Indian Ocean</div>
+          <p>Sediment core extrusion, microfacies analysis, high-res documentation.</p>
+        </div>
+      </section>
+
+      <section id="skills">
+        <h2>Technical Expertise</h2>
+        <div class="skills-grid">
+          <div class="skill-block">
+            <strong>Isotope Methods</strong>
+            EA-IRMS, PLFA, CSIA, mixing models, pulse-chase
+          </div>
+          <div class="skill-block">
+            <strong>Lab Protocols</strong>
+            Collagen extraction, amino acid derivatization, soil sieving, core processing
+          </div>
+          <div class="skill-block">
+            <strong>Statistics</strong>
+            R (ANOVA, PCA, linear models), t-tests, isotope calculations
+          </div>
+          <div class="skill-block">
+            <strong>Software</strong>
+            QGIS, RStudio, Python, MS Office, CorelDRAW
+          </div>
+          <div class="skill-block">
+            <strong>Languages</strong>
+            Russian (native), English (fluent), German (basic)
+          </div>
+        </div>
+      </section>
+
+      <section id="cv">
+        <h2>Full CV</h2>
+        <p>Complete academic record, publications, and references available upon request.</p>
+        <a class="cv-link" href="CV-Vsevolod-Klekovkin-PhD.pdf" target="_blank">📄 Download CV (PDF)</a>
+      </section>
+    </main>
+  </div>
+
+  <!-- Popup Image Containers -->
+  <div class="image-popup" id="popup-biosphere">
+    <h3>Biosphere Dynamics & PLFA Analysis</h3>
+    <div class="image-frame">
+      <div class="popup-image-pair">
+        <img src="Picture10.png" alt="PLFA PCA biplot - Actinobacteria enrichment" class="popup-image">
+        <img src="Picture9.png" alt="¹³C allocation across pools" class="popup-image">
       </div>
-    </section>
+    </div>
+  </div>
 
-    <section id="cv">
-      <h2>Full CV</h2>
-      <p>For a detailed overview of coursework, publications and references, see my full CV.</p>
-      <a class="cv-link" href="files/CV-Vsevolod-Klekovkin-PhD.docx">
-        <span>↓</span> Download CV
-      </a>
-    </section>
+  <div class="image-popup" id="popup-sla">
+    <h3>SLA Terrace Walls - Light Gradients</h3>
+    <div class="image-frame">
+      <div class="popup-image-pair">
+        <img src="Picture4.png" alt="SLA vs light variability (R²=0.47)" class="popup-image">
+        <img src="Picture3.png" alt="Effect of LIght Availability on SLA (R²=0.0013)" class="popup-image">
+      </div>
+    </div>
+  </div>
 
-    <section id="contact">
-      <h2>Contact</h2>
-      <p>I am open to PhD opportunities in soil biogeochemistry, geoecology and related fields.</p>
-      <p>Email: <a href="mailto:evolodklek@gmail.com">evolodklek@gmail.com</a></p>
-    </section>
-  </main>
-
-  <!-- FIXED JavaScript -->
   <script>
-    console.log("Script loaded");
-
-    const projectBlocks = document.querySelectorAll(".project");
-    const galleryImages = document.querySelectorAll(".project-gallery img");
-    const debugEl = document.getElementById("debug");
-
-    console.log(`${projectBlocks.length} projects, ${galleryImages.length} images`);
-
-    const activateImage = (index) => {
-      console.log(`Activating image ${index}`);
-      
-      galleryImages.forEach(img => {
-        const isActive = parseInt(img.dataset.img) === index;
-        img.classList.toggle("active", isActive);
-        if (isActive) console.log(`Image ${img.dataset.img} is now active`);
-      });
-      
-      debugEl.textContent = index;
-      debugEl.style.opacity = 1;
+    const sections=document.querySelectorAll('section[data-popup]:not([data-popup="none"])');
+    const popups=document.querySelectorAll('.image-popup');
+    
+    const showPopup=(targetId)=>{
+      popups.forEach(p=>p.classList.remove('active'));
+      sections.forEach(s=>s.classList.remove('active'));
+      const target=document.getElementById('popup-'+targetId);
+      if(target)target.classList.add('active');
     };
-
-    // Initialize
-    projectBlocks.forEach((block, index) => {
-      block.dataset.project = index;
-      console.log(`Project ${index}:`, block);
-    });
-    activateImage(0);
-
-    // Scroll observer - SIMPLIFIED & ROBUST
-    const observerOptions = {
-      threshold: 0.3,
-      rootMargin: '0px 0px -20% 0px'
+    
+    const hidePopup=()=>{
+      popups.forEach(p=>p.classList.remove('active'));
+      sections.forEach(s=>s.classList.remove('active'));
     };
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          const projectIndex = parseInt(entry.target.dataset.project);
-          console.log(`Project ${projectIndex} is visible`);
-          activateImage(projectIndex);
+    
+    const observer=new IntersectionObserver(entries=>{
+      entries.forEach(entry=>{
+        if(entry.isIntersecting){
+          const popupType=entry.target.dataset.popup;
+          if(popupType!=='none')showPopup(popupType);
+        }else{
+          hidePopup();
         }
       });
-    }, observerOptions);
-
-    // Observe all projects
-    projectBlocks.forEach(block => {
-      observer.observe(block);
+    },{threshold:0.25,rootMargin:'-5% 0px -50% 0px'});
+    
+    sections.forEach(section=>observer.observe(section));
+    
+    document.addEventListener('click',e=>{
+      if(!e.target.closest('.image-popup')&&!e.target.closest('section[data-popup]'))hidePopup();
     });
-
-    // Fallback: scroll event
-    window.addEventListener('scroll', () => {
-      let visibleProject = -1;
-      projectBlocks.forEach((block, index) => {
-        const rect = block.getBoundingClientRect();
-        if (rect.top < window.innerHeight * 0.6 && rect.bottom > window.innerHeight * 0.3) {
-          visibleProject = index;
-        }
-      });
-      
-      if (visibleProject !== -1) {
-        activateImage(visibleProject);
-      }
-    });
-
-    console.log("Observer setup complete");
+    
+    if(window.innerWidth<900)hidePopup();
+    window.addEventListener('resize',()=>{if(window.innerWidth<900)hidePopup();});
   </script>
 </body>
 </html>
+
