@@ -70,7 +70,26 @@
     .project-title{font-size:1.15rem;font-weight:600;margin-bottom:.6rem;color:var(--text);}
     .project-meta{font-size:.88rem;color:var(--accent);margin-bottom:1rem;text-transform:uppercase;letter-spacing:.05em;}
     
-    .image-popup{position:fixed;top:0;right:-720px;width:720px;height:100vh;background:rgba(11,12,16,.98);border-left:1px solid rgba(255,255,255,.1);backdrop-filter:blur(20px);z-index:1000;display:flex;flex-direction:column;gap:20px;padding:3rem 2rem 2rem;overflow-y:auto;transition:all .6s cubic-bezier(.25,.46,.45,.94);box-shadow:-25px 0 70px rgba(0,0,0,.9);}
+   .image-popup {
+  position: fixed;
+  top: 0;
+  right: -720px;
+  width: 720px;
+  height: 100vh;
+  background: rgba(11,12,16,.98);
+  border-left: 1px solid rgba(255,255,255,.1);
+  backdrop-filter: blur(20px);
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 3rem 2rem 2rem;
+  overflow-y: auto;
+  transition: all .6s cubic-bezier(.25,.46,.45,.94);
+  box-shadow: -25px 0 70px rgba(0,0,0,.9);
+  contain: layout style;  /* ← ADD THIS LINE HERE */
+}
+
     .image-popup.active{right:0;}
     .image-popup h3{color:var(--accent);font-size:1.15rem;margin-bottom:1.5rem;text-align:center;letter-spacing:.05em;border-bottom:1px solid rgba(72,201,176,.3);padding-bottom:.8rem;}
     .image-frame{display:flex;flex-direction:column;gap:1.5rem;}
@@ -330,114 +349,119 @@
   <!-- Mobile back arrow -->
 <button class="back-arrow" id="backArrow">←</button>
 <script>
-    const sections=document.querySelectorAll('section[data-popup]:not([data-popup="none"])');
-    const popups=document.querySelectorAll('.image-popup');
-    
-    const showPopup=(targetId)=>{
-      popups.forEach(p=>p.classList.remove('active'));
-      sections.forEach(s=>s.classList.remove('active'));
-      const target=document.getElementById('popup-'+targetId);
-      if(target)target.classList.add('active');
-    };
-    
-    const hidePopup=()=>{
-      popups.forEach(p=>p.classList.remove('active'));
-      sections.forEach(s=>s.classList.remove('active'));
-    };
-    
-    const observer=new IntersectionObserver(entries=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting){
-          const popupType=entry.target.dataset.popup;
-          if(popupType!=='none')showPopup(popupType);
-        }else{
-          hidePopup();
-        }
-      });
-    },{threshold:0.25,rootMargin:'-5% 0px -50% 0px'});
-    
-    sections.forEach(section=>observer.observe(section));
-    
-    document.addEventListener('click',e=>{
-      if(!e.target.closest('.image-popup')&&!e.target.closest('section[data-popup]'))hidePopup();
+const sections = document.querySelectorAll('section[data-popup]:not([data-popup="none"])');
+const popups = document.querySelectorAll('.image-popup');
+const backArrow = document.getElementById('backArrow');
+
+let isZoomedStates = {}; // Track zoom per image
+
+const showPopup = (targetId) => {
+  popups.forEach(p => p.classList.remove('active'));
+  sections.forEach(s => s.classList.remove('active'));
+  const target = document.getElementById('popup-' + targetId);
+  if (target) {
+    target.classList.add('active');
+    if (window.innerWidth <= 900) toggleBackArrow(true);
+  }
+};
+
+const hidePopup = () => {
+  popups.forEach(p => p.classList.remove('active'));
+  sections.forEach(s => s.classList.remove('active'));
+  if (window.innerWidth <= 900) toggleBackArrow(false);
+  // Reset all zooms
+  document.querySelectorAll('.popup-image.zoomable.zoomed').forEach(img => {
+    img.classList.remove('zoomed');
+    img.style.transform = '';
+  });
+};
+
+const toggleBackArrow = (show) => {
+  if (backArrow) backArrow.classList.toggle('active', show);
+};
+
+// FIXED Observer - more sensitive for zoom/PC
+const observer = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const popupType = entry.target.dataset.popup;
+        if (popupType !== 'none') showPopup(popupType);
+      } else {
+        hidePopup();
+      }
     });
-    
-    if(window.innerWidth<900)hidePopup();
-    window.addEventListener('resize',()=>{if(window.innerWidth<900)hidePopup();});
-    // Mobile zoom + pan - FIXED
-document.addEventListener('DOMContentLoaded', function() {
+  },
+  {
+    threshold: [0.1, 0.3, 0.5], // Multiple thresholds
+    rootMargin: '-10% 0px -30% 0px' // Less aggressive
+  }
+);
+
+sections.forEach((section) => observer.observe(section));
+
+// Click outside to close
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.image-popup') && !e.target.closest('section[data-popup]')) {
+    hidePopup();
+  }
+});
+
+// Mobile zoom + pan
+document.addEventListener('DOMContentLoaded', () => {
   const images = document.querySelectorAll('.popup-image');
-  images.forEach(img => {
+  images.forEach((img, index) => {
     img.classList.add('zoomable');
+    const imgId = `img-${index}`;
+    isZoomedStates[imgId] = false;
     
-    let isZoomed = false;
-    let translateX = 0, translateY = 0;
-    let startTouchX, startTouchY;
-    
-    // Tap to zoom (mobile)
     img.addEventListener('click', (e) => {
       if (window.innerWidth <= 900) {
         e.stopPropagation();
-        isZoomed = !isZoomed;
-        img.classList.toggle('zoomed', isZoomed);
-        if (!isZoomed) {
-          translateX = 0;
-          translateY = 0;
+        isZoomedStates[imgId] = !isZoomedStates[imgId];
+        img.classList.toggle('zoomed', isZoomedStates[imgId]);
+        if (!isZoomedStates[imgId]) {
           img.style.transform = '';
         }
       }
     });
     
-    // Touch pan
+    let startTouchX, startTouchY, translateX = 0, translateY = 0;
     img.addEventListener('touchstart', (e) => {
-      if (isZoomed && e.touches.length === 1) {
+      if (isZoomedStates[imgId] && e.touches.length === 1) {
         startTouchX = e.touches[0].clientX - translateX;
         startTouchY = e.touches[0].clientY - translateY;
       }
     });
     
     img.addEventListener('touchmove', (e) => {
-      if (isZoomed && e.touches.length === 1) {
+      if (isZoomedStates[imgId] && e.touches.length === 1) {
         e.preventDefault();
         translateX = e.touches[0].clientX - startTouchX;
         translateY = e.touches[0].clientY - startTouchY;
-        img.style.transform = scale(2.5) translate(${translateX}px, ${translateY}px);
+        img.style.transform = `scale(2.5) translate(${translateX}px, ${translateY}px)`;
       }
     });
   });
 });
-// Mobile back arrow
-const backArrow = document.getElementById('backArrow');
 
-function toggleBackArrow(show) {
-  if (window.innerWidth <= 900) {
-    backArrow.classList.toggle('active', show);
-  }
+// Back arrow
+if (backArrow) {
+  backArrow.addEventListener('click', (e) => {
+    e.stopPropagation();
+    hidePopup();
+  });
 }
 
-// Update existing showPopup & hidePopup
-const originalShowPopup = showPopup;
-showPopup = function(targetId) {
-  originalShowPopup(targetId);
-  toggleBackArrow(true);
-};
-
-const originalHidePopup = hidePopup;
-hidePopup = function() {
-  originalHidePopup();
-  toggleBackArrow(false);
-};
-
-// Back arrow click
-backArrow.addEventListener('click', (e) => {
-  e.stopPropagation();
-  hidePopup();
+// Initial hide + resize
+if (window.innerWidth < 900) hidePopup();
+window.addEventListener('resize', () => {
+  if (window.innerWidth < 900) hidePopup();
 });
-
-  </script>
-
+</script>
 </body>
 </html>
+
 
 
 
