@@ -112,29 +112,11 @@
     .workflow li{padding:.5rem 0 .5rem 1.2rem;position:relative;}
     .workflow li:before{content:"→";position:absolute;left:0;color:var(--accent);font-weight:bold;font-size:1.1em;}
     
-   @media (max-width:900px){
-  .container{flex-direction:column;}
-  .sidebar{
-    position:static;
-    width:100%;
-    height:auto;
-    flex-direction:row;
-    align-items:center;
-    gap:2rem;
-    padding:2rem;
-    box-shadow:0 8px 30px rgba(0,0,0,.5);
-  }
-  .sidebar-main{flex:1;text-align:left;}
-  /* ADD THESE MOBILE AVATAR FIXES: */
-  .avatar{
-    width:80px !important;    /* Smaller on mobile */
-    height:80px !important;
-    max-width:80px !important;
-    flex-shrink:0;
-     }
-  .sidebar-main h1{font-size:1.3rem;}  /* Bigger mobile text */
-  .tagline{font-size:0.85rem;}
-  }
+   @media (max-width:1200px){.image-popup{width:90vw;right:-90vw;max-width:500px;}}
+    @media (max-width:900px){
+      .container{flex-direction:column;}
+      .sidebar{position:static;width:100%;height:auto;flex-direction:row;align-items:center;gap:2rem;padding:2rem;box-shadow:0 8px 30px rgba(0,0,0,.5);}
+      .sidebar-main{flex:1;text-align:left;}
   .main-content{padding:2rem;}
       .image-popup{display:none;}
       section.active{padding:2.5rem !important;margin-left:0 !important;}
@@ -329,6 +311,7 @@
   </script>
 </body>
 </html>
+
 
 
 
