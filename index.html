@@ -330,113 +330,105 @@
   <!-- Mobile back arrow -->
 <button class="back-arrow" id="backArrow">←</button>
   <script>
-    const sections=document.querySelectorAll('section[data-popup]:not([data-popup="none"])');
-    const popups=document.querySelectorAll('.image-popup');
-    
-    const showPopup=(targetId)=>{
-      popups.forEach(p=>p.classList.remove('active'));
-      sections.forEach(s=>s.classList.remove('active'));
-      const target=document.getElementById('popup-'+targetId);
-      if(target)target.classList.add('active');
-    };
-    
-    const hidePopup=()=>{
-      popups.forEach(p=>p.classList.remove('active'));
-      sections.forEach(s=>s.classList.remove('active'));
-    };
-    
-    const observer=new IntersectionObserver(entries=>{
-      entries.forEach(entry=>{
-        if(entry.isIntersecting){
-          const popupType=entry.target.dataset.popup;
-          if(popupType!=='none')showPopup(popupType);
-        }else{
-          hidePopup();
+  const sections = document.querySelectorAll('section[data-popup]:not([data-popup="none"])');
+  const popups = document.querySelectorAll('.image-popup');
+  
+  // Save originals
+  let originalShowPopup = showPopup;
+  let originalHidePopup = hidePopup;
+  
+  const showPopup = (targetId) => {
+    popups.forEach(p => p.classList.remove('active'));
+    sections.forEach(s => s.classList.remove('active'));
+    const target = document.getElementById('popup-' + targetId);
+    if (target) target.classList.add('active');
+    toggleBackArrow(true);
+  };
+  
+  const hidePopup = () => {
+    popups.forEach(p => p.classList.remove('active'));
+    sections.forEach(s => s.classList.remove('active'));
+    toggleBackArrow(false);
+  };
+  
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const popupType = entry.target.dataset.popup;
+        if (popupType !== 'none') showPopup(popupType);
+      } else {
+        hidePopup();
+      }
+    });
+  }, { threshold: 0.25, rootMargin: '-5% 0px -50% 0px' });
+  
+  sections.forEach(section => observer.observe(section));
+  
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.image-popup') && !e.target.closest('section[data-popup]')) hidePopup();
+  });
+  
+  // Mobile zoom + pan
+  document.addEventListener('DOMContentLoaded', function() {
+    const images = document.querySelectorAll('.popup-image');
+    images.forEach(img => {
+      img.classList.add('zoomable');
+      
+      let isZoomed = false;
+      let translateX = 0, translateY = 0;
+      let startTouchX, startTouchY;
+      
+      img.addEventListener('click', (e) => {
+        if (window.innerWidth <= 900) {
+          e.stopPropagation();
+          isZoomed = !isZoomed;
+          img.classList.toggle('zoomed', isZoomed);
+          if (!isZoomed) {
+            translateX = 0;
+            translateY = 0;
+            img.style.transform = '';
+          }
         }
       });
-    },{threshold:0.25,rootMargin:'-5% 0px -50% 0px'});
-    
-    sections.forEach(section=>observer.observe(section));
-    
-    document.addEventListener('click',e=>{
-      if(!e.target.closest('.image-popup')&&!e.target.closest('section[data-popup]'))hidePopup();
-    });
-    
-    if(window.innerWidth<900)hidePopup();
-    window.addEventListener('resize',()=>{if(window.innerWidth<900)hidePopup();});
-    // Mobile zoom + pan - FIXED
-document.addEventListener('DOMContentLoaded', function() {
-  const images = document.querySelectorAll('.popup-image');
-  images.forEach(img => {
-    img.classList.add('zoomable');
-    
-    let isZoomed = false;
-    let translateX = 0, translateY = 0;
-    let startTouchX, startTouchY;
-    
-    // Tap to zoom (mobile)
-    img.addEventListener('click', (e) => {
-      if (window.innerWidth <= 900) {
-        e.stopPropagation();
-        isZoomed = !isZoomed;
-        img.classList.toggle('zoomed', isZoomed);
-        if (!isZoomed) {
-          translateX = 0;
-          translateY = 0;
-          img.style.transform = '';
+      
+      img.addEventListener('touchstart', (e) => {
+        if (isZoomed && e.touches.length === 1) {
+          startTouchX = e.touches[0].clientX - translateX;
+          startTouchY = e.touches[0].clientY - translateY;
         }
-      }
-    });
-    
-    // Touch pan
-    img.addEventListener('touchstart', (e) => {
-      if (isZoomed && e.touches.length === 1) {
-        startTouchX = e.touches[0].clientX - translateX;
-        startTouchY = e.touches[0].clientY - translateY;
-      }
-    });
-    
-    img.addEventListener('touchmove', (e) => {
-      if (isZoomed && e.touches.length === 1) {
-        e.preventDefault();
-        translateX = e.touches[0].clientX - startTouchX;
-        translateY = e.touches[0].clientY - startTouchY;
-        img.style.transform = `scale(2.5) translate(${translateX}px, ${translateY}px)`;
-      }
+      });
+      
+      img.addEventListener('touchmove', (e) => {
+        if (isZoomed && e.touches.length === 1) {
+          e.preventDefault();
+          translateX = e.touches[0].clientX - startTouchX;
+          translateY = e.touches[0].clientY - startTouchY;
+          img.style.transform = `scale(2.5) translate(${translateX}px, ${translateY}px)`;
+        }
+      });
     });
   });
-});
-// Mobile back arrow
-const backArrow = document.getElementById('backArrow');
-
-function toggleBackArrow(show) {
-  if (window.innerWidth <= 900) {
-    backArrow.classList.toggle('active', show);
+  
+  // Mobile back arrow
+  const backArrow = document.getElementById('backArrow');
+  function toggleBackArrow(show) {
+    if (window.innerWidth <= 900) {
+      backArrow.classList.toggle('active', show);
+    }
   }
-}
+  
+  backArrow.addEventListener('click', (e) => {
+    e.stopPropagation();
+    hidePopup();
+  });
+  
+  if (window.innerWidth < 900) hidePopup();
+  window.addEventListener('resize', () => { if (window.innerWidth < 900) hidePopup(); });
+</script>
 
-// Update existing showPopup & hidePopup
-const originalShowPopup = showPopup;
-showPopup = function(targetId) {
-  originalShowPopup(targetId);
-  toggleBackArrow(true);
-};
-
-const originalHidePopup = hidePopup;
-hidePopup = function() {
-  originalHidePopup();
-  toggleBackArrow(false);
-};
-
-// Back arrow click
-backArrow.addEventListener('click', (e) => {
-  e.stopPropagation();
-  hidePopup();
-});
-
-  </script>
 </body>
 </html>
+
 
 
 
