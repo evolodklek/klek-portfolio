@@ -12,7 +12,22 @@
     
     /* NEW: Single layer layout - sidebar + content side-by-side */
     .container{display:flex;min-height:100vh;}
-    .sidebar{position:sticky;top:0;width:340px;height:100vh;padding:2.5rem 2rem;background:linear-gradient(160deg,#050609,#141824);border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;gap:1.5rem;box-shadow:4px 0 30px rgba(0,0,0,.4);}
+    .sidebar {
+  position:sticky;
+  top:0;
+  width:340px;
+  height:100vh;
+  padding:2.5rem 2rem;
+  background:linear-gradient(160deg,#050609,#141824);
+  border-right:1px solid rgba(255,255,255,.06);
+  display:flex;
+  flex-direction:column;
+  gap:1.5rem;
+  box-shadow:4px 0 30px rgba(0,0,0,.4);
+  overflow-y:auto;  /* ADD THIS */
+  overscroll-behavior:contain;  /* ADD THIS - prevents scroll bleed */
+}
+
     .main-content{flex:1;padding:2.5rem 4vw 2.5rem 2rem;max-width:1100px;overflow-y:auto;}
     
     .avatar{width:120px;height:120px;border-radius:50%;overflow:hidden;border:2px solid rgba(255,255,255,.15);box-shadow:0 18px 40px rgba(0,0,0,.8);margin:0 auto 1rem;}
@@ -26,7 +41,14 @@
     nav{display:flex;flex-direction:column;gap:.3rem;}
     nav a{font-size:.85rem;color:var(--muted);text-decoration:none;padding:.35rem .6rem;border-radius:999px;transition:all .2s ease;}
     nav a:hover,nav a.active{color:var(--text);background:rgba(255,255,255,.04);}
-    .contact{margin-top:auto;font-size:.8rem;color:var(--muted);text-align:center;}
+    .contact {
+  margin-top:auto;
+  font-size:.8rem;
+  color:var(--muted);
+  text-align:center;
+  flex-shrink:0;  /* ADD THIS */
+  padding-bottom:1rem;  /* ADD THIS */
+}
     .contact a{color:var(--accent);text-decoration:none;}
     
     section{position:relative;background:rgba(10,13,22,.9);border-radius:var(--radius);padding:2.5rem 2.5rem 2.5rem 2rem;margin-bottom:2rem;border:1px solid rgba(255,255,255,.05);box-shadow:0 20px 45px rgba(0,0,0,.5);backdrop-filter:blur(20px);transition:margin-left .6s cubic-bezier(.25,.46,.45,.94),padding-right .6s cubic-bezier(.25,.46,.45,.94),padding-left .6s cubic-bezier(.25,.46,.45,.94);}
@@ -296,6 +318,7 @@
   </script>
 </body>
 </html>
+
 
 
 
