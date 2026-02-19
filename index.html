@@ -155,48 +155,6 @@
     nav a{font-size:0.75rem;padding:0.3rem 0.5rem;}
     .skills-grid{grid-template-columns:1fr;gap:1rem;}
   }
-  
-  /* Mobile zoomable images */
-  .popup-image.zoomable {
-    cursor: grab;
-    transition: transform 0.3s ease;
-  }
-  .popup-image.zoomable.zoomed {
-    cursor: grab;
-    transform: scale(2.5);
-    transform-origin: center;
-  }
-  .popup-image.zoomable:active {
-    cursor: grabbing;
-  }
-    /* Mobile back arrow */
-.back-arrow {
-  position: fixed;
-  top: 20px;
-  left: 20px;
-  z-index: 3000;
-  background: rgba(72, 201, 176, 0.9);
-  color: white;
-  border: none;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  font-size: 20px;
-  cursor: pointer;
-  display: none;
-  backdrop-filter: blur(10px);
-  box-shadow: 0 8px 25px rgba(72, 201, 176, 0.3);
-  transition: all 0.3s ease;
-}
-.back-arrow:hover {
-  background: #48c9b0;
-  transform: scale(1.1);
-}
-.back-arrow.active {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
   </style>
 </head>
 <body>
@@ -346,101 +304,50 @@
     <img src="images/Picture3.png" alt="SLA light availability" class="popup-image">
   </div>
 </div>
-  <!-- Mobile back arrow -->
-<button class="back-arrow" id="backArrow">←</button>
-<script>
-// DEBUG: Console log to verify loading
-console.log('Script loaded');
 
-// Elements
+<script>
 const sections = document.querySelectorAll('section[data-popup]:not([data-popup="none"])');
 const popups = document.querySelectorAll('.image-popup');
-const backArrow = document.querySelector('#backArrow');
-
-console.log('Sections:', sections.length, 'Popups:', popups.length, 'Arrow:', backArrow);
 
 const showPopup = (targetId) => {
-  console.log('Showing popup:', targetId);
   popups.forEach(p => p.classList.remove('active'));
   sections.forEach(s => s.classList.remove('active'));
   const target = document.getElementById('popup-' + targetId);
-  if (target) {
-    target.classList.add('active');
-    if (backArrow && window.innerWidth <= 900) {
-      backArrow.classList.add('active');
-      console.log('Back arrow shown');
-    }
-  }
+  if (target) target.classList.add('active');
 };
 
 const hidePopup = () => {
-  console.log('Hiding popup');
   popups.forEach(p => p.classList.remove('active'));
   sections.forEach(s => s.classList.remove('active'));
-  if (backArrow) {
-    backArrow.classList.remove('active');
-  }
 };
 
-// Observer
-const observer = new IntersectionObserver(
-  (entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        const popupType = entry.target.dataset.popup;
-        if (popupType !== 'none') showPopup(popupType);
-      } else {
-        hidePopup();
-      }
-    });
-  },
-  { threshold: 0.2, rootMargin: '-5% 0px -30% 0px' }
-);
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const popupType = entry.target.dataset.popup;
+      if (popupType !== 'none') showPopup(popupType);
+    } else {
+      hidePopup();
+    }
+  });
+}, { threshold: 0.25, rootMargin: '-5% 0px -50% 0px' });
 
 sections.forEach(section => observer.observe(section));
 
-// Events
-document.addEventListener('click', (e) => {
+document.addEventListener('click', e => {
   if (!e.target.closest('.image-popup') && !e.target.closest('section[data-popup]')) {
     hidePopup();
   }
 });
 
-if (backArrow) {
-  backArrow.addEventListener('click', (e) => {
-    console.log('Back arrow clicked!');
-    e.preventDefault();
-    e.stopPropagation();
-    hidePopup();
-  });
-}
-
-// Mobile zoom (simplified)
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('.popup-image').forEach(img => {
-    img.classList.add('zoomable');
-    
-    let isZoomed = false;
-    img.addEventListener('click', (e) => {
-      if (window.innerWidth <= 900) {
-        e.stopPropagation();
-        isZoomed = !isZoomed;
-        img.classList.toggle('zoomed', isZoomed);
-      }
-    });
-  });
-});
-
-// Init
 if (window.innerWidth < 900) hidePopup();
-window.addEventListener('resize', () => {
-  if (window.innerWidth < 900) hidePopup();
-});
+window.addEventListener('resize', () => { if (window.innerWidth < 900) hidePopup(); });
 </script>
 
 
 </body>
 </html>
+
 
 
 
