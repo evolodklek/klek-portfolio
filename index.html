@@ -346,6 +346,7 @@
 <script>
 const sections = document.querySelectorAll('section[data-popup]:not([data-popup="none"])');
 const popups = document.querySelectorAll('.image-popup');
+const backArrowPC = document.getElementById('backArrowPC');
 
 const showPopup = (targetId) => {
   popups.forEach(p => p.classList.remove('active'));
@@ -357,8 +358,10 @@ const showPopup = (targetId) => {
 const hidePopup = () => {
   popups.forEach(p => p.classList.remove('active'));
   sections.forEach(s => s.classList.remove('active'));
+  if (backArrowPC) backArrowPC.classList.remove('active');
 };
 
+// SINGLE Observer
 const observer = new IntersectionObserver(entries => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
@@ -372,66 +375,51 @@ const observer = new IntersectionObserver(entries => {
 
 sections.forEach(section => observer.observe(section));
 
+// Click outside
 document.addEventListener('click', e => {
   if (!e.target.closest('.image-popup') && !e.target.closest('section[data-popup]')) {
     hidePopup();
   }
 });
 
-if (window.innerWidth < 900) hidePopup();
-window.addEventListener('resize', () => { if (window.innerWidth < 900) hidePopup(); });
-
-// PC Back Arrow
-const backArrowPC = document.getElementById('backArrowPC');
+// PC Back Arrow - SIMPLE
 if (backArrowPC) {
-  backArrowPC.addEventListener('click', (e) => {
+  backArrowPC.addEventListener('click', e => {
     e.stopPropagation();
     hidePopup();
   });
-}
-
-// Update showPopup to show arrow on PC
-const showWithArrow = (targetId) => {
-  showPopup(targetId);
-  if (backArrowPC && window.innerWidth > 900) {
-    backArrowPC.classList.add('active');
-  }
-};
-
-// Use showWithArrow in observer
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      const popupType = entry.target.dataset.popup;
-      if (popupType !== 'none') showWithArrow(popupType);
-    } else {
-      hidePopup();
-      if (backArrowPC) backArrowPC.classList.remove('active');
+  
+  // Show when popup active (PC only)
+  const checkArrow = () => {
+    const hasActivePopup = document.querySelector('.image-popup.active');
+    if (window.innerWidth > 900) {
+      backArrowPC.classList.toggle('active', !!hasActivePopup);
     }
-  });
-}, { threshold: 0.25, rootMargin: '-5% 0px -50% 0px' });
-// PC Back Arrow - MINIMAL SAFE
-const backArrowPC = document.getElementById('backArrowPC');
-if (backArrowPC) {
-  // Show arrow when ANY popup active
-  document.addEventListener('scroll', () => {
-    const anyPopupActive = document.querySelector('.image-popup.active');
-    backArrowPC.classList.toggle('active', !!anyPopupActive && window.innerWidth > 900);
-  });
+  };
   
-  // Close on click
-  backArrowPC.addEventListener('click', (e) => {
-    e.stopPropagation();
-    hidePopup();
-  });
+  // Check on scroll/mutation
+  let scrollTimer;
+  document.addEventListener('scroll', () => {
+    clearTimeout(scrollTimer);
+    scrollTimer = setTimeout(checkArrow, 50);
+  }, { passive: true });
+  
+  // Initial check
+  checkArrow();
 }
 
-  
+// Mobile hide + resize
+if (window.innerWidth < 900) hidePopup();
+window.addEventListener('resize', () => {
+  if (window.innerWidth < 900) hidePopup();
+});
 </script>
+
 
 
 </body>
 </html>
+
 
 
 
